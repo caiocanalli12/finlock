@@ -1,8 +1,8 @@
 # FinLock
 
-[cite_start]O FinLock é uma plataforma web desenvolvida para a organização financeira pessoal[cite: 63]. [cite_start]O objetivo do sistema é permitir que os usuários controlem suas receitas, despesas e investimentos de maneira visual, simples e intuitiva[cite: 64]. 
+O FinLock é uma plataforma web desenvolvida para a organização financeira pessoal. O objetivo do sistema é permitir que os usuários controlem suas receitas, despesas e investimentos de maneira visual, simples e intuitiva. 
 
-[cite_start]O projeto foi estruturado com base em uma arquitetura Single Page Application (SPA), garantindo que, após a autenticação do usuário, todas as funcionalidades operem de forma centralizada em um único Dashboard interativo, eliminando a necessidade de redirecionamentos contínuos entre páginas[cite: 65].
+O projeto foi estruturado com base em uma arquitetura Single Page Application (SPA), garantindo que, após a autenticação, todas as funcionalidades operem de forma centralizada em um único Dashboard interativo, eliminando a necessidade de redirecionamentos contínuos entre páginas.
 
 ---
 
@@ -10,12 +10,12 @@
 
 O sistema contempla as seguintes operações centrais para o usuário:
 
-* [cite_start]**RF01 - Landing Page:** Exibição da apresentação pública do sistema, seguida pelas opções de Cadastro e Login[cite: 67].
-* [cite_start]**RF02 e RF03 - Acesso e Autenticação:** Registro de novos usuários e autenticação obrigatória (Login) para garantir a segurança no acesso às funcionalidades do sistema[cite: 67, 68].
-* [cite_start]**RF04 e RF05 - Gestão de Entradas e Saídas:** Módulo para registro detalhado de receitas e despesas organizadas por categorias, datas e valores, contando com cálculo de totalização automatizada[cite: 69, 70].
-* [cite_start]**RF06 - Resumo Financeiro:** Exibição de saldos consolidados e totalizadores de receitas e despesas, com atualização em tempo real[cite: 71, 72].
-* [cite_start]**RF07 - Painel de Gráficos:** Representação visual dos dados financeiros por meio de comparativos, com a vantagem de serem atualizados em tempo real[cite: 71, 72].
-* [cite_start]**RF08 - Painel de Investimentos:** Integração com API externa para o módulo de investimentos, contendo simulador de cenários que requer dados de valor inicial, aportes, taxa e período de tempo[cite: 73, 74].
+* **RF01 - Landing Page:** Exibição da apresentação pública do sistema, seguida pelas opções de Cadastro e Login.
+* **RF02 e RF03 - Acesso e Autenticação:** Registro de novos usuários e autenticação obrigatória (Login) para garantir a segurança no acesso às funcionalidades do sistema.
+* **RF04 e RF05 - Gestão de Entradas e Saídas:** Módulo para registro detalhado de receitas e despesas organizadas por categorias, datas e valores, contando com cálculo de totalização automatizada.
+* **RF06 - Resumo Financeiro:** Exibição de saldos consolidados e totalizadores de receitas e despesas, com atualização em tempo real.
+* **RF07 - Painel de Gráficos:** Representação visual dos dados financeiros por meio de comparativos, com a vantagem de serem atualizados em tempo real.
+* **RF08 - Painel de Investimentos:** Integração com API externa para o módulo de investimentos, contendo simulador de cenários que requer dados de valor inicial, aportes, taxa e período de tempo.
 
 ---
 
@@ -23,37 +23,37 @@ O sistema contempla as seguintes operações centrais para o usuário:
 
 A arquitetura e a infraestrutura do sistema são regidas pelas seguintes diretrizes técnicas:
 
-* [cite_start]**RNF01 e RNF02 - Plataforma e Arquitetura:** Implementação estrita de aplicação web baseada no padrão Single Page Application (SPA)[cite: 65].
-* [cite_start]**RNF03 - Performance:** Processamento de cálculos analíticos e atualização de dados executados em tempo real no Dashboard[cite: 75].
-* [cite_start]**RNF04 - Segurança:** Aplicação de validações rigorosas em todos os dados inseridos nos campos de entrada e implementação de protocolos firmes para o processo de autenticação de usuários[cite: 76].
+* **RNF01 e RNF02 - Plataforma e Arquitetura:** Implementação estrita de aplicação web baseada no padrão Single Page Application (SPA).
+* **RNF03 - Performance:** Processamento de cálculos analíticos e atualização de dados executados em tempo real no Dashboard.
+* **RNF04 - Segurança:** Aplicação de validações rigorosas em todos os dados inseridos nos campos de entrada e implementação de protocolos firmes para o processo de autenticação de usuários.
 
 ---
 
 ## Design System e Interface do Usuário (UI)
 
-[cite_start]O projeto emprega uma paleta de cores formal, baseada em tons de verde e azul, projetada para transmitir segurança, crescimento e tranquilidade, sendo ideal para o contexto financeiro[cite: 84].
+O projeto emprega uma paleta de cores formal, baseada em tons de verde e azul, projetada para transmitir segurança, crescimento e tranquilidade, sendo ideal para o contexto financeiro.
 
 ### Paleta de Cores Base
-* [cite_start]`--evergreen`: `#002626ff`[cite: 82]
-* [cite_start]`--pearl-aqua`: `#94d1beff`[cite: 82]
-* [cite_start]`--onyx`: `#141414ff`[cite: 82]
-* [cite_start]`--light-cyan`: `#daf0eeff`[cite: 82]
-* [cite_start]`--ash-grey`: `#9db5b2ff`[cite: 82]
+* `--evergreen`: `#002626ff`
+* `--pearl-aqua`: `#94d1beff`
+* `--onyx`: `#141414ff`
+* `--light-cyan`: `#daf0eeff`
+* `--ash-grey`: `#9db5b2ff`
 
 ### Comportamento de Temas (Light / Dark Mode)
 
-[cite_start]Para assegurar acessibilidade, contraste adequado e evitar o cansaço visual, a interface aplica as seguintes distribuições de cores conforme o tema selecionado[cite: 85, 95]:
+Para assegurar acessibilidade, contraste adequado e evitar o cansaço visual, a interface aplica as seguintes distribuições de cores conforme o tema selecionado:
 
 #### Modo Claro (Light Mode)
-* [cite_start]**Background Principal:** `--light-cyan` (Utilizado como cor base para a página e grandes áreas, mantendo a interface limpa e iluminada)[cite: 89].
-* [cite_start]**Textos Principais e Tipografia:** `--onyx` (Aplicado em títulos, valores numéricos e textos principais para garantir alto contraste e legibilidade)[cite: 90].
-* [cite_start]**Ações e Marca:** `--evergreen` (Direcionado a botões de ação primária e cabeçalhos principais)[cite: 91].
-* [cite_start]**Destaques e Ações Secundárias:** `--pearl-aqua` (Aplicado em botões secundários, ícones, seleções ativas no menu e detalhes nos gráficos)[cite: 92].
-* [cite_start]**Elementos Neutros:** `--ash-grey` (Utilizado para delimitação de bordas dos painéis, divisórias e textos secundários)[cite: 93].
+* **Background Principal:** `--light-cyan` (Utilizado como cor base para a página e grandes áreas, mantendo a interface limpa e iluminada).
+* **Textos Principais e Tipografia:** `--onyx` (Aplicado em títulos, valores numéricos e textos principais para garantir alto contraste e legibilidade).
+* **Ações e Marca:** `--evergreen` (Direcionado a botões de ação primária e cabeçalhos principais).
+* **Destaques e Ações Secundárias:** `--pearl-aqua` (Aplicado em botões secundários, ícones, seleções ativas no menu e detalhes nos gráficos).
+* **Elementos Neutros:** `--ash-grey` (Utilizado para delimitação de bordas dos painéis, divisórias e textos secundários).
 
 #### Modo Escuro (Dark Mode)
-* [cite_start]**Background Principal:** `--evergreen` (Cor base para a tela inteira, criando uma atmosfera imersiva e consolidando a identidade visual)[cite: 110, 111].
-* [cite_start]**Superfícies e Cards:** `--onyx` (Fundo das áreas de destaque do Dashboard, criando o contraste de profundidade ideal sobre o fundo verde)[cite: 112, 113].
-* [cite_start]**Textos e Tipografia:** `--light-cyan` (Garante excelente legibilidade e alto contraste para títulos e valores numéricos sobre os fundos escuros)[cite: 114].
-* [cite_start]**Ações e Destaques:** `--pearl-aqua` (Evidencia botões principais de ação, indicadores de saldo positivo, links e traçados de gráficos)[cite: 115].
-* [cite_start]**Elementos Neutros:** `--ash-grey` (Mantém a estruturação da interface através de bordas sutis para separar cards e textos de apoio)[cite: 116].
+* **Background Principal:** `--evergreen` (Cor base para a tela inteira, criando uma atmosfera imersiva e consolidando a identidade visual).
+* **Superfícies e Cards:** `--onyx` (Fundo das áreas de destaque do Dashboard, criando o contraste de profundidade ideal sobre o fundo verde).
+* **Textos e Tipografia:** `--light-cyan` (Garante excelente legibilidade e alto contraste para títulos e valores numéricos sobre os fundos escuros).
+* **Ações e Destaques:** `--pearl-aqua` (Evidencia botões principais de ação, indicadores de saldo positivo, links e traçados de gráficos).
+* **Elementos Neutros:** `--ash-grey` (Mantém a estruturação da interface através de bordas sutis para separar cards e textos de apoio).
