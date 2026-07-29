@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
+import LogoImage from '../components/Logo';
 const navItems = [
   { label: 'Benefícios', href: '#beneficios' },
   { label: 'Como funciona', href: '#como-funciona' },
@@ -65,10 +66,7 @@ const categories = [
 function Logo() {
   return (
     <a className="logo" href="#inicio" aria-label="Voltar ao início do FinLock">
-      <span className="logo__mark" aria-hidden="true">
-        <span className="logo__slot" />
-      </span>
-      <span>FinLock</span>
+      <LogoImage style={{ height: '48px', width: 'auto' }} />
     </a>
   );
 }

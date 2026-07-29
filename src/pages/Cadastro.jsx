@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './auth.css';
+import Logo from '../components/Logo';
 
 export default function Cadastro() {
   const [name, setName] = useState('');
@@ -44,10 +45,7 @@ export default function Cadastro() {
     <div className="auth-container">
       <div className="auth-card">
         <Link to="/" className="auth-logo">
-          <span className="logo__mark">
-            <span className="logo__slot" />
-          </span>
-          <span>FinLock</span>
+          <Logo />
         </Link>
         
         <div className="auth-header">

@@ -1,16 +1,7 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 
-function Logo() {
-  return (
-    <div className="logo">
-      <span className="logo__mark" aria-hidden="true">
-        <span className="logo__slot" />
-      </span>
-      <span>FinLock</span>
-    </div>
-  );
-}
+import Logo from '../Logo';
 
 export default function Sidebar({ isOpen, onClose }) {
   const navigate = useNavigate();
@@ -23,7 +14,7 @@ export default function Sidebar({ isOpen, onClose }) {
   return (
     <aside className={`sidebar ${isOpen ? 'is-open' : ''}`}>
       <div className="sidebar-header">
-        <Logo />
+        <Logo className="logo" />
       </div>
       <nav className="sidebar-nav">
         <NavLink 
