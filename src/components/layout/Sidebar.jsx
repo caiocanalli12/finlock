@@ -14,7 +14,7 @@ export default function Sidebar({ isOpen, onClose }) {
   return (
     <aside className={`sidebar ${isOpen ? 'is-open' : ''}`}>
       <div className="sidebar-header">
-        <Logo className="logo" />
+        <Logo />
       </div>
       <nav className="sidebar-nav">
         <NavLink 
