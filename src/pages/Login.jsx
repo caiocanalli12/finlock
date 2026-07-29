@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 import './auth.css';
 import Logo from '../components/Logo';
 
@@ -8,6 +9,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const getErrorMessage = (errorMsg) => {
@@ -36,13 +38,14 @@ export default function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-<<<<<<< Updated upstream
       // Simulate API call
       if (email === 'demo@finlock.com' && password === '123456') {
-=======
+        navigate('/dashboard');
+        return;
+      }
       setIsLoading(true);
       
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -51,6 +54,7 @@ export default function Login() {
       });
 
       if (error) {
+<<<<<<< HEAD
         setErrors({ submit: getErrorMessage(error.message) });
         setIsLoading(false);
         return;
@@ -61,7 +65,18 @@ export default function Login() {
         navigate('/dashboard');
       } else {
         setErrors({ submit: 'Credenciais inválidas. Tente demo@finlock.com / 123456' });
+=======
+        setErrors({ submit: 'Credenciais inválidas ou erro ao entrar: ' + error.message });
+        setIsLoading(false);
+        return;
+>>>>>>> d73678555a480bdb850a45d6acb09df2628da2e8
       }
+
+      if (data?.user) {
+        navigate('/dashboard');
+      }
+      
+      setIsLoading(false);
     }
   };
 
@@ -118,8 +133,8 @@ export default function Login() {
 
           {errors.submit && <div className="error-message" style={{ marginTop: '16px', textAlign: 'center' }}>{errors.submit}</div>}
 
-          <button type="submit" className="auth-button" style={{ width: '100%' }}>
-            Entrar
+          <button type="submit" className="auth-button" style={{ width: '100%' }} disabled={isLoading}>
+            {isLoading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
 

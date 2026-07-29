@@ -5,13 +5,33 @@ import TransactionsTable from '../components/dashboard/TransactionsTable';
 import TransactionModal from '../components/dashboard/TransactionModal';
 
 const INITIAL_TRANSACTIONS: Transaction[] = [
-  { id: '1', title: 'Salário', amount: 5800, type: 'income', category: 'Receita', date: new Date(Date.now() - 86400000 * 5).toISOString() },
+  { id: '1', title: 'Salário', amount: 5800, type: 'income', category: 'Salário', date: new Date(Date.now() - 86400000 * 5).toISOString() },
   { id: '2', title: 'Mercado', amount: 324.50, type: 'expense', category: 'Alimentação', date: new Date(Date.now() - 86400000 * 2).toISOString() },
   { id: '3', title: 'Internet', amount: 109, type: 'expense', category: 'Moradia', date: new Date().toISOString() }
 ];
 
 export default function Dashboard() {
-  const [transactions, setTransactions] = useState<Transaction[]>(INITIAL_TRANSACTIONS);
+  const [transactions, setTransactions] = useState<Transaction[]>(() => {
+    const savedInitialBalance = localStorage.getItem('finlock_initial_balance');
+    if (savedInitialBalance) {
+      const parsedBalance = parseFloat(savedInitialBalance);
+      if (!isNaN(parsedBalance) && parsedBalance > 0) {
+        return [
+          {
+            id: 'initial-balance',
+            title: 'Saldo Inicial (Onboarding)',
+            amount: parsedBalance,
+            type: 'income',
+            category: 'Receita',
+            date: new Date().toISOString()
+          },
+          ...INITIAL_TRANSACTIONS
+        ];
+      }
+    }
+    return INITIAL_TRANSACTIONS;
+  });
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [transactionToEdit, setTransactionToEdit] = useState<Transaction | null>(null);
 
@@ -20,8 +40,21 @@ export default function Dashboard() {
       setTransactionToEdit(null);
       setIsModalOpen(true);
     };
+
+    const handleAddDirect = (e: Event) => {
+      const customEvent = e as CustomEvent<Transaction>;
+      if (customEvent.detail) {
+        setTransactions(prev => [customEvent.detail, ...prev]);
+      }
+    };
+
     window.addEventListener('open-transaction-modal', handleOpenModal);
-    return () => window.removeEventListener('open-transaction-modal', handleOpenModal);
+    window.addEventListener('add-direct-transaction', handleAddDirect);
+
+    return () => {
+      window.removeEventListener('open-transaction-modal', handleOpenModal);
+      window.removeEventListener('add-direct-transaction', handleAddDirect);
+    };
   }, []);
 
   const handleSaveTransaction = (transaction: Transaction) => {

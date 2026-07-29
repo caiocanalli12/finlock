@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 import './auth.css';
 import Logo from '../components/Logo';
 
@@ -9,6 +10,7 @@ export default function Cadastro() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const getErrorMessage = (errorMsg) => {
@@ -46,13 +48,9 @@ export default function Cadastro() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-<<<<<<< Updated upstream
-      // Simula a criação e redireciona
-      navigate('/dashboard');
-=======
       setIsLoading(true);
       
       const { data, error } = await supabase.auth.signUp({
@@ -85,7 +83,10 @@ export default function Cadastro() {
       }
       
       setIsLoading(false);
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> d73678555a480bdb850a45d6acb09df2628da2e8
     }
   };
 
@@ -155,8 +156,10 @@ export default function Cadastro() {
             {errors.password && <span className="error-message">{errors.password}</span>}
           </div>
 
-          <button type="submit" className="auth-button" style={{ width: '100%', marginTop: '24px' }}>
-            Cadastrar
+          {errors.submit && <div className="error-message" style={{ marginTop: '16px', textAlign: 'center' }}>{errors.submit}</div>}
+
+          <button type="submit" className="auth-button" style={{ width: '100%', marginTop: '24px' }} disabled={isLoading}>
+            {isLoading ? 'Cadastrando...' : 'Cadastrar'}
           </button>
         </form>
 
