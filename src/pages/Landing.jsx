@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useState } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 const navItems = [
   { label: 'Benefícios', href: '#beneficios' },
   { label: 'Como funciona', href: '#como-funciona' },
@@ -413,23 +413,7 @@ function Footer() {
 }
 
 export default function App() {
-  const [theme, setTheme] = useState(() => {
-    const savedTheme = window.localStorage.getItem('finlock-theme');
-    if (savedTheme === 'light' || savedTheme === 'dark') {
-      return savedTheme;
-    }
-
-    return 'light';
-  });
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    window.localStorage.setItem('finlock-theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'));
-  };
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <>

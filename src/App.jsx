@@ -1,23 +1,24 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import Dashboard from './pages/Dashboard';
+import DashboardLayout from './components/layout/DashboardLayout';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 export default function App() {
-  useEffect(() => {
-    // Aplica globalmente o tema que o usuário escolheu na página inicial
-    const savedTheme = window.localStorage.getItem('finlock-theme') || 'light';
-    document.documentElement.dataset.theme = savedTheme;
-  }, []);
-
   return (
-    <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/cadastro" element={<Cadastro />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-    </Routes>
+    <ThemeProvider>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
+        
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Dashboard />} />
+        </Route>
+      </Routes>
+    </ThemeProvider>
   );
 }
