@@ -65,8 +65,8 @@ export default function Cadastro() {
           return;
         }
 
-        // Redirect to dashboard on success
-        navigate('/dashboard');
+        // Redirect to onboarding on success
+        navigate('/onboarding');
       }
       
       setIsLoading(false);
