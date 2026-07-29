@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 import './auth.css';
 import Logo from '../components/Logo';
 
@@ -9,6 +10,7 @@ export default function Cadastro() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const validate = () => {
@@ -33,11 +35,41 @@ export default function Cadastro() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      // Simula a criação e redireciona
-      navigate('/dashboard');
+      setIsLoading(true);
+      
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        setErrors({ submit: error.message });
+        setIsLoading(false);
+        return;
+      }
+
+      // If successful, insert into custom user table
+      if (data?.user) {
+        const { error: insertError } = await supabase.from("usuarios").insert({
+          id: data.user.id,
+          nome: name,
+          email: email
+        });
+
+        if (insertError) {
+          setErrors({ submit: 'Erro ao salvar perfil: ' + insertError.message });
+          setIsLoading(false);
+          return;
+        }
+
+        // Redirect to dashboard on success
+        navigate('/dashboard');
+      }
+      
+      setIsLoading(false);
     }
   };
 
@@ -107,8 +139,10 @@ export default function Cadastro() {
             {errors.password && <span className="error-message">{errors.password}</span>}
           </div>
 
-          <button type="submit" className="auth-button" style={{ width: '100%', marginTop: '24px' }}>
-            Cadastrar
+          {errors.submit && <div className="error-message" style={{ marginTop: '16px', textAlign: 'center' }}>{errors.submit}</div>}
+
+          <button type="submit" className="auth-button" style={{ width: '100%', marginTop: '24px' }} disabled={isLoading}>
+            {isLoading ? 'Cadastrando...' : 'Cadastrar'}
           </button>
         </form>
 
