@@ -10,6 +10,16 @@ export default function Login() {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
+  const getErrorMessage = (errorMsg) => {
+    if (errorMsg.includes('Invalid login credentials') || errorMsg.includes('Invalid email or password')) {
+      return 'E-mail ou senha incorretos.';
+    }
+    if (errorMsg.includes('Email not confirmed')) {
+      return 'Por favor, confirme seu e-mail antes de entrar.';
+    }
+    return `Erro ao entrar: ${errorMsg}`;
+  };
+
   const validate = () => {
     const newErrors = {};
     if (!email) {
@@ -29,8 +39,25 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
+<<<<<<< Updated upstream
       // Simulate API call
       if (email === 'demo@finlock.com' && password === '123456') {
+=======
+      setIsLoading(true);
+      
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setErrors({ submit: getErrorMessage(error.message) });
+        setIsLoading(false);
+        return;
+      }
+
+      if (data?.user) {
+>>>>>>> Stashed changes
         navigate('/dashboard');
       } else {
         setErrors({ submit: 'Credenciais inválidas. Tente demo@finlock.com / 123456' });

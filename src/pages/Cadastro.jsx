@@ -11,6 +11,19 @@ export default function Cadastro() {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
+  const getErrorMessage = (errorMsg) => {
+    if (errorMsg.includes('User already registered') || errorMsg.includes('already exists')) {
+      return 'Este e-mail já está cadastrado em nossa plataforma.';
+    }
+    if (errorMsg.includes('Password should be at least')) {
+      return 'A senha deve ter pelo menos 6 caracteres.';
+    }
+    if (errorMsg.includes('Email rate limit exceeded') || errorMsg.includes('Too many requests')) {
+      return 'Muitas tentativas de cadastro. Tente novamente mais tarde.';
+    }
+    return `Erro ao cadastrar: ${errorMsg}`;
+  };
+
   const validate = () => {
     const newErrors = {};
     if (!name.trim()) {
@@ -36,8 +49,43 @@ export default function Cadastro() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
+<<<<<<< Updated upstream
       // Simula a criação e redireciona
       navigate('/dashboard');
+=======
+      setIsLoading(true);
+      
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        setErrors({ submit: getErrorMessage(error.message) });
+        setIsLoading(false);
+        return;
+      }
+
+      // If successful, insert into custom user table
+      if (data?.user) {
+        const { error: insertError } = await supabase.from("usuarios").insert({
+          id: data.user.id,
+          nome: name,
+          email: email
+        });
+
+        if (insertError) {
+          setErrors({ submit: 'Erro ao salvar perfil: ' + insertError.message });
+          setIsLoading(false);
+          return;
+        }
+
+        // Redirect to onboarding on success
+        navigate('/onboarding');
+      }
+      
+      setIsLoading(false);
+>>>>>>> Stashed changes
     }
   };
 
