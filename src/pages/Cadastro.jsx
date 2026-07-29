@@ -36,8 +36,8 @@ export default function Cadastro() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      // Simula a criação e redireciona
-      navigate('/dashboard');
+      // Simula a criação e redireciona para o onboarding
+      navigate('/onboarding');
     }
   };
 

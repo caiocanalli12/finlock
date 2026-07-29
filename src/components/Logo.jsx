@@ -3,7 +3,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import lightLogo from '../assets/lightmodelogo.png';
 import darkLogo from '../assets/darkmodelogo.png';
 
-export default function Logo({ className = '', style = { height: '32px', width: 'auto' } }) {
+export default function Logo({ className = '', style = {} }) {
   const { theme } = useTheme();
   
   return (
@@ -11,7 +11,14 @@ export default function Logo({ className = '', style = { height: '32px', width: 
       src={theme === 'dark' ? darkLogo : lightLogo} 
       alt="FinLock Logo" 
       className={className}
-      style={style}
+      style={{ 
+        height: '32px', 
+        width: 'auto', 
+        display: 'inline-block', 
+        objectFit: 'contain', 
+        verticalAlign: 'middle',
+        ...style 
+      }}
     />
   );
 }
