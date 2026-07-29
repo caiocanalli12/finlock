@@ -58,7 +58,7 @@ function InteractiveChart() {
       flexDirection: 'column',
       justifyContent: 'space-between',
       alignItems: 'center',
-      background: theme === 'dark' ? '#003636' : '#e6f5f3',
+      background: theme === 'dark' ? '#003636' : 'var(--bg-main)',
       padding: '2rem',
       borderRadius: '24px',
       border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid rgba(0, 0, 0, 0.05)',
