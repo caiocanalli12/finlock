@@ -1,14 +1,15 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { supabase } from '../../lib/supabase';
 
 import Logo from '../Logo';
 
 export default function Sidebar({ isOpen, onClose }) {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // Limpar estado de auth será feito aqui futuramente
-    navigate('/login');
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
   };
 
   return (
