@@ -239,19 +239,19 @@ function Hero() {
       <div className="container" style={{ 
         maxWidth: '1600px',
         display: 'grid', 
-        gridTemplateColumns: 'minmax(400px, 1.3fr) minmax(300px, 1fr)', 
-        gap: '14rem', 
+        gridTemplateColumns: 'minmax(500px, 1.5fr) minmax(300px, 1fr)', 
+        gap: '6rem', 
         alignItems: 'center',
         paddingTop: '2rem',
         paddingBottom: '2rem'
       }}>
         
         {/* Left Column */}
-        <div className="hero__content reveal" style={{ alignItems: 'flex-start', textAlign: 'left', margin: 0, transform: 'translateX(-4rem)' }}>
-          <p className="eyebrow" style={{ color: theme === 'dark' ? 'var(--pearl-aqua)' : 'var(--evergreen)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '1.1rem', whiteSpace: 'nowrap', marginBottom: '0.5rem' }}>
+        <div className="hero__content reveal" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', margin: 0 }}>
+          <p className="eyebrow" style={{ color: theme === 'dark' ? 'var(--pearl-aqua)' : 'var(--evergreen)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '1.1rem', whiteSpace: 'nowrap', marginBottom: '0.5rem', margin: '0 auto 0.5rem' }}>
             Gestão financeira sem dor de cabeça.
           </p>
-          <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', margin: '0 0 1rem', marginLeft: '-0.5rem' }}>
+          <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', margin: '0 auto 1rem' }}>
             <img 
               src={logobranca} 
               alt="FinLock Logo" 
@@ -283,19 +283,18 @@ function Hero() {
 
           <p className="hero__lead" style={{ 
             fontSize: '1.35rem', 
-            marginBottom: '4rem', 
+            margin: '0 auto 4rem', 
             color: 'var(--text-muted)', 
             maxWidth: '100%', 
             lineHeight: '1.85',
             textAlign: 'justify',
             fontWeight: '400',
-            opacity: 0.9,
-            marginLeft: '3rem'
+            opacity: 0.9
           }}>
             O FinLock é a sua plataforma definitiva para organizar finanças, controlar gastos e planejar o futuro sem depender de planilhas complexas. Tudo o que você precisa de forma clara, direta e visual.
           </p>
 
-          <div className="hero__actions" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '1.5rem', flexWrap: 'nowrap', width: '100%', marginLeft: '3rem' }}>
+          <div className="hero__actions" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1.5rem', flexWrap: 'nowrap', width: '100%' }}>
             <a 
               className="button button--primary button--large" 
               href="/cadastro" 
