@@ -83,10 +83,7 @@ export default function Cadastro() {
       }
       
       setIsLoading(false);
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> d73678555a480bdb850a45d6acb09df2628da2e8
+
     }
   };
 
