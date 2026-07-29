@@ -1,412 +1,384 @@
 import React, { useState } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import LogoImage from '../components/Logo';
-const navItems = [
-  { label: 'Benefícios', href: '#beneficios' },
-  { label: 'Como funciona', href: '#como-funciona' },
-  { label: 'Dashboard', href: '#dashboard' },
-  { label: 'Investimentos', href: '#investimentos' },
-];
+import { Link } from 'react-router-dom';
+import logobranca from '../assets/logobranca.png';
 
-const features = [
-  {
-    label: '01',
-    title: 'Controle sem planilha infinita',
-    text: 'Receitas, despesas e saldo ficam no mesmo contexto, com leitura rápida para a rotina.',
-  },
-  {
-    label: '02',
-    title: 'Categorias que explicam o mês',
-    text: 'Veja onde o dinheiro está indo e identifique padrões antes que eles virem surpresa.',
-  },
-  {
-    label: '03',
-    title: 'Evolução com sinais claros',
-    text: 'Indicadores e gráficos ajudam a entender se o mês está saudável ou precisa de ajuste.',
-  },
-  {
-    label: '04',
-    title: 'Planejamento para investir melhor',
-    text: 'Simule aportes, taxas e períodos para tomar decisões com mais calma.',
-  },
-];
-
-const steps = [
-  {
-    number: '01',
-    title: 'Cadastre-se',
-    text: 'Crie sua conta de forma rápida e segura.',
-  },
-  {
-    number: '02',
-    title: 'Registre o essencial',
-    text: 'Adicione entradas, saídas e categorias sem perder tempo.',
-  },
-  {
-    number: '03',
-    title: 'Leia o painel',
-    text: 'Acompanhe saldo, evolução e próximos passos em uma única visão.',
-  },
-];
-
-const transactions = [
-  ['Salário', 'Receita', '+ R$ 5.800'],
-  ['Mercado', 'Alimentação', '- R$ 324'],
-  ['Tesouro Selic', 'Investimento', '+ R$ 450'],
-  ['Internet', 'Moradia', '- R$ 109'],
-];
-
-const categories = [
-  { label: 'Moradia', value: '36%', size: 36 },
-  { label: 'Alimentação', value: '24%', size: 24 },
-  { label: 'Transporte', value: '18%', size: 18 },
-  { label: 'Lazer', value: '12%', size: 12 },
-];
-
-function Logo() {
+function Logo({ large = false }) {
   return (
-    <a className="logo" href="#inicio" aria-label="Voltar ao início do FinLock">
-      <LogoImage style={{ height: '48px', width: 'auto' }} />
-    </a>
+    <Link className="logo" to="/" aria-label="Voltar ao início do FinLock" style={{ display: 'inline-block' }}>
+      <LogoImage style={{ height: large ? '84px' : '48px', width: 'auto' }} />
+    </Link>
   );
 }
 
-function Navbar({ theme, onToggleTheme }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const closeMenu = () => setIsOpen(false);
-  const nextThemeLabel = theme === 'dark' ? 'modo claro' : 'modo escuro';
+function InteractiveChart() {
+  const { theme } = useTheme();
+  const [hoveredSlice, setHoveredSlice] = useState(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  
+  // Pega o mês atual dinamicamente em Português
+  const currentMonth = new Date().toLocaleString('pt-BR', { month: 'long' });
+  const capitalizedMonth = currentMonth.charAt(0).toUpperCase() + currentMonth.slice(1);
+
+  // Dados simulados com subcategorias
+  const incomeData = [
+    { label: 'Salário', value: 7000, color: '#15803d', emoji: '💼' },
+    { label: 'Investimentos', value: 1500, color: '#4ade80', emoji: '📈' }
+  ];
+
+  const expenseData = [
+    { label: 'Aluguel', value: 1500, color: '#be123c', emoji: '🏠' },     // Vermelho/Rose Escuro
+    { label: 'Alimentação', value: 900, color: '#ea580c', emoji: '🍽️' },  // Laranja Vibrante
+    { label: 'Transporte', value: 400, color: '#eab308', emoji: '🚗' },   // Amarelo Ouro
+    { label: 'Lazer', value: 400, color: '#fca5a5', emoji: '🎉' }        // Rosa Claro
+  ];
+
+  const totalIncome = incomeData.reduce((acc, curr) => acc + curr.value, 0);
+  const totalExpense = expenseData.reduce((acc, curr) => acc + curr.value, 0);
+  const total = totalIncome + totalExpense;
+  
+  const incomePercent = totalIncome / total;
+  const expensePercent = totalExpense / total;
+
+  // Cálculos do SVG da rosquinha
+  const radius = 70;
+  const circumference = 2 * Math.PI * radius;
+  
+  const incomeDash = incomePercent * circumference;
+  const expenseDash = expensePercent * circumference;
 
   return (
-    <header className="site-header">
-      <nav className="navbar container" aria-label="Navegação principal">
-        <Logo />
-        <button
-          className="menu-toggle"
-          type="button"
-          aria-label={isOpen ? 'Fechar menu' : 'Abrir menu'}
-          aria-expanded={isOpen}
-          onClick={() => setIsOpen((open) => !open)}
-        >
-          <span />
-          <span />
-        </button>
-        <div className={`nav-panel ${isOpen ? 'is-open' : ''}`}>
-          <div className="nav-links">
-            {navItems.map((item) => (
-              <a href={item.href} key={item.href} onClick={closeMenu}>
-                {item.label}
-              </a>
-            ))}
-          </div>
-          <div className="nav-actions">
-            <button
-              className="theme-toggle"
-              type="button"
-              aria-label={`Alternar para ${nextThemeLabel}`}
-              aria-pressed={theme === 'dark'}
-              onClick={onToggleTheme}
-            >
-              <span aria-hidden="true" />
-              {theme === 'dark' ? 'Claro' : 'Escuro'}
-            </button>
-            <a className="button button--ghost" href="/login" onClick={closeMenu}>
-              Entrar
-            </a>
-            <a className="button button--primary" href="/cadastro" onClick={closeMenu}>
-              Criar conta
-            </a>
-          </div>
+    <div style={{
+      width: '100%',
+      maxWidth: '420px',
+      aspectRatio: '1 / 1',
+      position: 'relative',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      background: theme === 'dark' ? '#003636' : '#e6f5f3',
+      padding: '2rem',
+      borderRadius: '24px',
+      border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid rgba(0, 0, 0, 0.05)',
+      boxShadow: theme === 'dark' ? '0 20px 50px rgba(0,0,0,0.5)' : '0 20px 50px rgba(0,0,0,0.06)'
+    }}>
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h3 style={{ color: 'var(--text-main)', margin: 0, fontSize: '1.2rem', fontWeight: 'bold' }}>Visão Mensal</h3>
+        <span style={{ fontSize: '0.85rem', color: 'var(--evergreen)', background: 'rgba(56, 175, 120, 0.1)', padding: '6px 16px', borderRadius: '20px', fontWeight: 'bold', textTransform: 'capitalize' }}>
+          {capitalizedMonth}
+        </span>
+      </div>
+
+      <div 
+        style={{ position: 'relative', width: '320px', height: '320px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexShrink: 0 }}
+        onMouseMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          setMousePos({
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+          });
+        }}
+        onMouseLeave={() => setHoveredSlice(null)}
+      >
+        <svg width="320" height="320" viewBox="0 0 200 200" style={{ transform: 'rotate(-90deg)', overflow: 'visible', pointerEvents: 'none' }}>
+          {/* Fundo da rosquinha (opcional, para dar um guia visual) */}
+          <circle cx="100" cy="100" r={radius} fill="transparent" stroke="var(--border)" strokeWidth="24" opacity="0.2" />
+          
+          {/* Fatias de Receita */}
+          {hoveredSlice === 'income' ? (
+            incomeData.map((cat, i) => {
+              const prevTotal = incomeData.slice(0, i).reduce((sum, c) => sum + c.value, 0);
+              const offset = -(prevTotal / total) * circumference;
+              const dash = (cat.value / total) * circumference;
+              return (
+                <circle 
+                  key={cat.label}
+                  cx="100" cy="100" r={radius}
+                  fill="transparent"
+                  stroke={cat.color}
+                  strokeWidth="28"
+                  strokeDasharray={`${dash} ${circumference}`}
+                  strokeDashoffset={offset}
+                  style={{ transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', cursor: 'pointer', pointerEvents: 'stroke' }}
+                  onMouseEnter={() => setHoveredSlice('income')}
+                />
+              );
+            })
+          ) : (
+            <circle 
+              cx="100" cy="100" r={radius}
+              fill="transparent"
+              stroke="#498a6c"
+              strokeWidth="24"
+              strokeDasharray={`${incomeDash} ${circumference}`}
+              strokeDashoffset="0"
+              style={{ transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', cursor: 'pointer', opacity: hoveredSlice === 'expense' ? 0.3 : 1, pointerEvents: 'stroke' }}
+              onMouseEnter={() => setHoveredSlice('income')}
+            />
+          )}
+          
+          {/* Fatias de Despesa */}
+          {hoveredSlice === 'expense' ? (
+            expenseData.map((cat, i) => {
+              const prevTotal = expenseData.slice(0, i).reduce((sum, c) => sum + c.value, 0);
+              const offset = -incomeDash - ((prevTotal / total) * circumference);
+              const dash = (cat.value / total) * circumference;
+              return (
+                <circle 
+                  key={cat.label}
+                  cx="100" cy="100" r={radius}
+                  fill="transparent"
+                  stroke={cat.color}
+                  strokeWidth="28"
+                  strokeDasharray={`${dash} ${circumference}`}
+                  strokeDashoffset={offset}
+                  style={{ transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', cursor: 'pointer', pointerEvents: 'stroke' }}
+                  onMouseEnter={() => setHoveredSlice('expense')}
+                />
+              );
+            })
+          ) : (
+            <circle 
+              cx="100" cy="100" r={radius}
+              fill="transparent"
+              stroke="#f43f5e"
+              strokeWidth="24"
+              strokeDasharray={`${expenseDash} ${circumference}`}
+              strokeDashoffset={-incomeDash}
+              style={{ transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', cursor: 'pointer', opacity: hoveredSlice === 'income' ? 0.3 : 1, pointerEvents: 'stroke' }}
+              onMouseEnter={() => setHoveredSlice('expense')}
+            />
+          )}
+        </svg>
+
+        {/* Texto Central */}
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          textAlign: 'center',
+          pointerEvents: 'none',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '140px',
+          height: '140px'
+        }}>
+          <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Saldo Restante</span>
+          <strong style={{ fontSize: '1.8rem', color: 'var(--text-main)', fontWeight: 'bold' }}>
+            R$ {totalIncome - totalExpense}
+          </strong>
         </div>
-      </nav>
-    </header>
-  );
-}
 
-function LedgerChart() {
-  return (
-    <div className="ledger-chart" aria-label="Gráfico demonstrativo de evolução financeira">
-      <svg viewBox="0 0 200 200" role="img" aria-hidden="true">
-        <circle cx="100" cy="100" r="80" fill="none" strokeWidth="24" className="chart-track" />
-        <circle cx="100" cy="100" r="80" fill="none" strokeWidth="24" className="chart-slice chart-slice-1" strokeDasharray="251 503" strokeDashoffset="0" />
-        <circle cx="100" cy="100" r="80" fill="none" strokeWidth="24" className="chart-slice chart-slice-2" strokeDasharray="151 503" strokeDashoffset="-251" />
-        <circle cx="100" cy="100" r="80" fill="none" strokeWidth="24" className="chart-slice chart-slice-3" strokeDasharray="101 503" strokeDashoffset="-402" />
-      </svg>
-    </div>
-  );
-}
-
-function DashboardShell({ compact = false }) {
-  return (
-    <div className={`dashboard-shell ${compact ? 'dashboard-shell--compact' : ''}`}>
-      <aside className="app-sidebar" aria-hidden="true">
-        <Logo />
-        <span />
-        <span />
-        <span />
-      </aside>
-      <div className="app-screen">
-        <div className="app-toolbar">
-          <div>
-            <span>Hoje</span>
-            <strong>Resumo financeiro</strong>
-          </div>
-          <p>Dados demonstrativos</p>
-        </div>
-
-        <div className="balance-row">
-          <article className="balance-card">
-            <span>Saldo disponível</span>
-            <strong>R$ 8.420,00</strong>
-            <small>+12% este mês</small>
-          </article>
-          <article className="balance-card balance-card--thin">
-            <span>Receitas</span>
-            <strong>R$ 6.900</strong>
-          </article>
-          <article className="balance-card balance-card--thin">
-            <span>Despesas</span>
-            <strong>R$ 3.180</strong>
-          </article>
-        </div>
-
-        <div className="workspace-row">
-          <article className="chart-panel">
-            <div className="panel-title">
-              <span>Evolução mensal</span>
-              <strong>Fluxo positivo</strong>
+        {/* Tooltip Dinâmico Seguindo o Mouse */}
+        {hoveredSlice && (
+          <div style={{
+            position: 'absolute',
+            top: mousePos.y,
+            left: mousePos.x,
+            transform: 'translate(20px, 20px)',
+            background: 'var(--bg-main)',
+            padding: '16px 20px',
+            borderRadius: '16px',
+            border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-lg)',
+            zIndex: 10,
+            pointerEvents: 'none',
+            whiteSpace: 'nowrap',
+            animation: 'fadeIn 0.1s ease forwards'
+          }}>
+            <div style={{ marginBottom: '10px', paddingBottom: '10px', borderBottom: '1px solid var(--border)' }}>
+              <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)', display: 'block' }}>
+                {hoveredSlice === 'income' ? 'Receita Total' : 'Despesa Total'}
+              </span>
+              <span style={{ fontSize: '1.25rem', color: hoveredSlice === 'income' ? '#498a6c' : '#be123c', fontWeight: 'bold' }}>
+                R$ {hoveredSlice === 'income' ? totalIncome : totalExpense}
+              </span>
             </div>
-            <LedgerChart />
-          </article>
-
-          <article className="category-panel">
-            <div className="panel-title">
-              <span>Categorias</span>
-              <strong>Distribuição</strong>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {(hoveredSlice === 'income' ? incomeData : expenseData).map(cat => (
+                <div key={cat.label} style={{ display: 'flex', justifyContent: 'space-between', gap: '24px', alignItems: 'center' }}>
+                  <span style={{ fontSize: '1rem', color: 'var(--text-main)' }}>
+                    <span style={{ filter: 'grayscale(100%)', opacity: 0.8, marginRight: '8px' }}>{cat.emoji}</span>
+                    {cat.label}
+                  </span>
+                  <span style={{ fontSize: '1rem', color: cat.color, fontWeight: 'bold' }}>R$ {cat.value}</span>
+                </div>
+              ))}
             </div>
-            {categories.slice(0, compact ? 3 : 4).map((category) => (
-              <div className="category-row" key={category.label}>
-                <div>
-                  <span>{category.label}</span>
-                  <small>{category.value}</small>
-                </div>
-                <div className="category-track">
-                  <span style={{ width: `${category.size}%` }} />
-                </div>
-              </div>
-            ))}
-          </article>
-        </div>
-
-        {!compact && (
-          <div className="transaction-strip" aria-label="Lançamentos demonstrativos">
-            {transactions.map(([name, type, value]) => (
-              <div className="transaction" key={name}>
-                <span>{name}</span>
-                <small>{type}</small>
-                <strong className={value.startsWith('+') ? 'is-positive' : ''}>{value}</strong>
-              </div>
-            ))}
           </div>
         )}
+      </div>
+
+      {/* Legenda Horizontal */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '3rem', width: '100%' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }} onMouseEnter={() => setHoveredSlice('income')} onMouseLeave={() => setHoveredSlice(null)}>
+          <span style={{ width: '16px', height: '16px', borderRadius: '50%', background: '#498a6c' }} />
+          <span style={{ fontSize: '1.1rem', color: hoveredSlice === 'expense' ? 'var(--text-muted)' : 'var(--text-main)', transition: 'color 0.3s', fontWeight: 'bold' }}>Receitas</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }} onMouseEnter={() => setHoveredSlice('expense')} onMouseLeave={() => setHoveredSlice(null)}>
+          <span style={{ width: '16px', height: '16px', borderRadius: '50%', background: '#be123c' }} />
+          <span style={{ fontSize: '1.1rem', color: hoveredSlice === 'income' ? 'var(--text-muted)' : 'var(--text-main)', transition: 'color 0.3s', fontWeight: 'bold' }}>Despesas</span>
+        </div>
       </div>
     </div>
   );
 }
 
 function Hero() {
+  const { theme } = useTheme();
+
   return (
-    <section className="hero section" id="inicio">
-      <div className="container hero__grid">
-        <div className="hero__content reveal">
-          <p className="eyebrow">Organização financeira com segurança</p>
-          <h1>Seu dinheiro, sem ruído.</h1>
-          <p className="hero__lead">
-            O FinLock reúne saldo, gastos, categorias e investimentos em um painel direto, para você
-            entender o mês sem depender de planilhas confusas.
+    <section className="hero section" id="inicio" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative' }}>
+      
+      <div className="container" style={{ 
+        maxWidth: '1600px',
+        display: 'grid', 
+        gridTemplateColumns: 'minmax(400px, 1.3fr) minmax(300px, 1fr)', 
+        gap: '14rem', 
+        alignItems: 'center',
+        paddingTop: '2rem',
+        paddingBottom: '2rem'
+      }}>
+        
+        {/* Left Column */}
+        <div className="hero__content reveal" style={{ alignItems: 'flex-start', textAlign: 'left', margin: 0, transform: 'translateX(-4rem)' }}>
+          <p className="eyebrow" style={{ color: theme === 'dark' ? 'var(--pearl-aqua)' : 'var(--evergreen)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '1.1rem', whiteSpace: 'nowrap', marginBottom: '0.5rem' }}>
+            Gestão financeira sem dor de cabeça.
           </p>
-          <div className="hero__actions">
-            <a className="button button--primary button--large" href="/cadastro">
-              Começar agora
+          <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', margin: '0 0 1rem', marginLeft: '-0.5rem' }}>
+            <img 
+              src={logobranca} 
+              alt="FinLock Logo" 
+              style={{ 
+                height: 'clamp(8rem, 15vw, 11rem)', 
+                width: 'auto', 
+                position: 'absolute', 
+                right: '100%', 
+                marginRight: '-2rem',
+                filter: theme === 'dark'
+                  ? 'drop-shadow(0 0 20px rgba(148, 209, 190, 0.5)) drop-shadow(0 0 8px rgba(148, 209, 190, 0.3))'
+                  : 'drop-shadow(0 0 20px rgba(33, 90, 68, 0.4)) drop-shadow(0 0 8px rgba(33, 90, 68, 0.2))'
+              }} 
+            />
+            <h1 style={{ 
+              fontSize: 'clamp(8rem, 15vw, 11rem)', 
+              margin: 0, 
+              lineHeight: '1',
+              fontWeight: '900',
+              color: theme === 'dark' ? 'var(--pearl-aqua)' : 'var(--evergreen)',
+              letterSpacing: '-4px',
+              textShadow: theme === 'dark' 
+                ? '0 0 40px rgba(148, 209, 190, 0.5), 0 0 15px rgba(148, 209, 190, 0.3)'
+                : '0 0 40px rgba(33, 90, 68, 0.4), 0 0 15px rgba(33, 90, 68, 0.2)'
+            }}>
+              FinLock
+            </h1>
+          </div>
+
+          <p className="hero__lead" style={{ 
+            fontSize: '1.35rem', 
+            marginBottom: '4rem', 
+            color: 'var(--text-muted)', 
+            maxWidth: '100%', 
+            lineHeight: '1.85',
+            textAlign: 'justify',
+            fontWeight: '400',
+            opacity: 0.9,
+            marginLeft: '3rem'
+          }}>
+            O FinLock é a sua plataforma definitiva para organizar finanças, controlar gastos e planejar o futuro sem depender de planilhas complexas. Tudo o que você precisa de forma clara, direta e visual.
+          </p>
+
+          <div className="hero__actions" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '1.5rem', flexWrap: 'nowrap', width: '100%', marginLeft: '3rem' }}>
+            <a 
+              className="button button--primary button--large" 
+              href="/cadastro" 
+              style={{ fontSize: '1.2rem', padding: '1.25rem 2.5rem', borderRadius: '16px', background: 'linear-gradient(135deg, var(--pearl-aqua), #7bc4ae)', color: '#022c22', border: '1.5px solid transparent', fontWeight: 'bold', boxShadow: theme === 'dark' ? '0 8px 30px rgba(148, 209, 190, 0.3)' : '0 8px 20px rgba(33, 90, 68, 0.2)', whiteSpace: 'nowrap', textAlign: 'center' }}
+            >
+              Criar conta gratuita
             </a>
-            <a className="button button--secondary button--large" href="#dashboard">
-              Ver o painel
+            <a 
+              className="button button--ghost button--large" 
+              href="/login" 
+              style={{ fontSize: '1.2rem', padding: '1.25rem 2.5rem', borderRadius: '16px', border: theme === 'dark' ? '1.5px solid rgba(255, 255, 255, 0.15)' : '1.5px solid rgba(0, 0, 0, 0.15)', color: 'var(--text-main)', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.02)', fontWeight: 'bold', whiteSpace: 'nowrap', textAlign: 'center' }}
+            >
+              Já tenho uma conta
             </a>
           </div>
         </div>
 
-        <div className="hero__visual reveal reveal--delay" aria-label="Prévia visual do dashboard">
-          <div className="security-note">
-            <span>lock</span>
-            <strong>Dados organizados por contexto</strong>
-          </div>
-          <DashboardShell />
+        {/* Right Column */}
+        <div className="hero__visual reveal reveal--delay" style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', position: 'relative', left: '100px' }}>
+          <InteractiveChart />
         </div>
-      </div>
-      <div className="container hero__baseline" aria-label="Destaques do FinLock">
-        <span>SPA preparada para dashboard</span>
-        <span>Login e cadastro previstos</span>
-        <span>Investimentos em evolução</span>
+        
       </div>
     </section>
   );
 }
 
-function Features() {
+function Footer({ theme, onToggleTheme }) {
+  const nextThemeLabel = theme === 'dark' ? 'modo claro' : 'modo escuro';
   return (
-    <section className="section benefits-section" id="beneficios">
-      <div className="container split-heading reveal">
-        <p className="eyebrow">Benefícios</p>
-        <h2>Organização financeira com cara de produto, não de planilha maquiada.</h2>
-      </div>
-      <div className="container feature-list">
-        {features.map((feature) => (
-          <article className="feature-row reveal" key={feature.title}>
-            <span>{feature.label}</span>
-            <h3>{feature.title}</h3>
-            <p>{feature.text}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function HowItWorks() {
-  return (
-    <section className="section how-section" id="como-funciona">
-      <div className="container how-grid">
-        <div className="section-heading section-heading--left reveal">
-          <p className="eyebrow">Como funciona</p>
-          <h2>Uma rotina curta para tirar as finanças do improviso.</h2>
-        </div>
-        <div className="steps">
-          {steps.map((step) => (
-            <article className="step reveal" key={step.number}>
-              <span>{step.number}</span>
-              <div>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function DashboardPreview() {
-  return (
-    <section className="section dashboard-section" id="dashboard">
-      <div className="container dashboard-grid">
-        <div className="section-heading section-heading--left reveal">
-          <p className="eyebrow">Dashboard</p>
-          <h2>A experiência depois do login precisa parecer centralizada desde o primeiro olhar.</h2>
-          <p>
-            O painel demonstra como saldo, receitas, despesas, evolução e categorias podem conviver
-            em uma tela única, com dados fictícios para apresentação.
-          </p>
-        </div>
-        <div className="reveal reveal--delay">
-          <DashboardShell compact />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function InvestmentsSection() {
-  return (
-    <section className="section investments" id="investimentos">
-      <div className="container investments-grid">
-        <div className="investment-panel reveal">
-          <div className="investment-panel__header">
-            <span>Simulação futura</span>
-            <strong>R$ 32.780</strong>
-          </div>
-          <div className="investment-inputs">
-            <div>
-              <span>Valor inicial</span>
-              <strong>R$ 5.000</strong>
-            </div>
-            <div>
-              <span>Aporte mensal</span>
-              <strong>R$ 450</strong>
-            </div>
-            <div>
-              <span>Taxa estimada</span>
-              <strong>0,85% a.m.</strong>
-            </div>
-            <div>
-              <span>Período</span>
-              <strong>48 meses</strong>
-            </div>
-          </div>
-          <div className="projection-line" aria-hidden="true">
-            <span />
-          </div>
-        </div>
-        <div className="section-heading section-heading--left reveal reveal--delay">
-          <p className="eyebrow">Investimentos</p>
-          <h2>Projeções simples antes de comprometer o orçamento.</h2>
-          <p>
-            A seção prepara o terreno para acompanhar investimentos, consultar informações, informar
-            valor inicial, aportes, taxa e período. O simulador real fica para a próxima etapa.
-          </p>
-          <a className="button button--secondary" href="/cadastro">
-            Preparar minha conta
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function FinalCTA() {
-  return (
-    <section className="final-cta section">
-      <div className="container final-cta__inner reveal">
-        <div>
-          <p className="eyebrow">Comece com clareza</p>
-          <h2>Organize o mês antes que ele organize você.</h2>
-        </div>
-        <p>
-          O FinLock ajuda você a acompanhar sua evolução financeira e planejar próximos passos com
-          mais calma.
-        </p>
-        <a className="button button--primary button--large" href="/cadastro">
-          Começar agora
-        </a>
-      </div>
-    </section>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="footer">
-      <div className="container footer__grid">
-        <div>
-          <Logo />
-          <p>
-            Plataforma web para organização financeira pessoal, controle de gastos e planejamento
-            com mais segurança.
-          </p>
-        </div>
-        <nav className="footer__links" aria-label="Links do rodapé">
-          {navItems.map((item) => (
-            <a href={item.href} key={item.href}>
-              {item.label}
-            </a>
-          ))}
-          <a href="/login">Login</a>
-          <a href="/cadastro">Cadastro</a>
-        </nav>
-      </div>
-      <div className="container footer__bottom">
-        <span>© 2026 FinLock. Todos os direitos reservados.</span>
-      </div>
-    </footer>
+    <>
+      {/* Floating Theme Toggle */}
+      <button 
+        className="theme-toggle" 
+        onClick={onToggleTheme} 
+        title={`Mudar para modo ${theme === 'light' ? 'escuro' : 'claro'}`}
+        style={{ 
+          position: 'fixed',
+          bottom: '2rem',
+          right: '2rem',
+          zIndex: 9999,
+          background: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)', 
+          border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.05)', 
+          borderRadius: '50%',
+          width: '52px',
+          height: '52px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          color: 'var(--text-main)',
+          backdropFilter: 'blur(10px)',
+          boxShadow: theme === 'dark' ? '0 4px 15px rgba(0,0,0,0.3)' : '0 4px 15px rgba(0,0,0,0.05)',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-3px)';
+          e.currentTarget.style.boxShadow = theme === 'dark' ? '0 8px 25px rgba(0,0,0,0.5)' : '0 8px 25px rgba(0,0,0,0.1)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = theme === 'dark' ? '0 4px 15px rgba(0,0,0,0.3)' : '0 4px 15px rgba(0,0,0,0.05)';
+        }}
+      >
+        {theme === 'light' ? (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        ) : (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        )}
+      </button>
+    </>
   );
 }
 
@@ -415,16 +387,11 @@ export default function App() {
 
   return (
     <>
-      <Navbar theme={theme} onToggleTheme={toggleTheme} />
+      {/* Navbar foi removida conforme solicitado */}
       <main>
         <Hero />
-        <Features />
-        <HowItWorks />
-        <DashboardPreview />
-        <InvestmentsSection />
-        <FinalCTA />
       </main>
-      <Footer />
+      <Footer theme={theme} onToggleTheme={toggleTheme} />
     </>
   );
 }

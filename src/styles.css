@@ -18,6 +18,7 @@
   --secondary: var(--pearl-aqua);
   --secondary-hover: #7dbba8;
   --border: var(--ash-grey);
+  --bg-texture: linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
   
   /* Glass and Surfaces */
   --surface: rgba(255, 255, 255, 0.6);
@@ -44,6 +45,7 @@
   --secondary: var(--onyx);
   --secondary-hover: #2a2a2a;
   --border: var(--ash-grey);
+  --bg-texture: linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
   
   /* Glass and Surfaces */
   --surface: rgba(20, 20, 20, 0.6);
@@ -68,7 +70,9 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  background: var(--bg-main);
+  background-color: var(--bg-main);
+  background-image: var(--bg-texture);
+  background-size: 40px 40px;
   color: var(--text-main);
   line-height: 1.6;
   overflow-x: hidden;
