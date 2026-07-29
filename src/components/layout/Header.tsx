@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../../contexts/ThemeContext';
+import { supabase } from '../../lib/supabase';
 
 interface HeaderProps {
   toggleSidebar?: () => void;
@@ -14,6 +15,30 @@ export default function Header({ toggleSidebar }: HeaderProps) {
   const [salaryAmount, setSalaryAmount] = useState<number>(3000);
   const [isEditingSalary, setIsEditingSalary] = useState(false);
   const [tempSalaryInput, setTempSalaryInput] = useState('');
+  const [userName, setUserName] = useState<string>('Utilizador');
+
+  // Buscar o nome do usuário logado no Supabase
+  useEffect(() => {
+    async function fetchUserName() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data, error } = await supabase
+          .from('usuarios')
+          .select('nome')
+          .eq('id', user.id)
+          .single();
+          
+        if (data && data.nome) {
+          // Pega apenas o primeiro nome
+          const firstName = data.nome.split(' ')[0];
+          setUserName(firstName);
+        } else if (error) {
+          console.error("Erro ao buscar o nome do usuário:", error.message);
+        }
+      }
+    }
+    fetchUserName();
+  }, []);
 
   // Carregar salário do localStorage
   useEffect(() => {
@@ -67,7 +92,7 @@ export default function Header({ toggleSidebar }: HeaderProps) {
           <span />
         </button>
         <div className="header-greeting">
-          Olá, Utilizador
+          Olá, {userName}
         </div>
       </div>
       <div className="header-actions">
