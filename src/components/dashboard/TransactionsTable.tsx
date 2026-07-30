@@ -19,11 +19,8 @@ export default function TransactionsTable({ transactions, onEdit, onDelete }: Pr
 
   return (
     <div style={{ 
-      backgroundColor: 'var(--bg-secondary)', 
-      border: '1px solid var(--border)', 
-      borderRadius: '12px',
       overflowX: 'auto',
-      boxShadow: 'var(--shadow-sm)'
+      marginBottom: '2rem'
     }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '600px' }}>
         <thead>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Transaction } from '../types';
 import SummaryCards from '../components/dashboard/SummaryCards';
+import DashboardChart from '../components/dashboard/DashboardChart';
 import TransactionsTable from '../components/dashboard/TransactionsTable';
 import TransactionModal from '../components/dashboard/TransactionModal';
 
@@ -85,6 +86,8 @@ export default function Dashboard() {
       </div>
       
       <SummaryCards transactions={transactions} />
+      
+      <DashboardChart transactions={transactions} />
       
       <div style={{ marginBottom: '16px' }}>
         <h3 style={{ color: 'var(--text-main)', fontSize: '1.2rem', fontFamily: 'Outfit, sans-serif', margin: 0 }}>Histórico de Transações</h3>

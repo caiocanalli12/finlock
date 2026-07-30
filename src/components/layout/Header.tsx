@@ -81,19 +81,23 @@ export default function Header({ toggleSidebar }: HeaderProps) {
 
   return (
     <header className="dashboard-header">
-      <div className="header-left">
-        <button 
-          className="menu-hamburger" 
-          onClick={toggleSidebar}
-          aria-label="Alternar menu"
-        >
-          <span />
-          <span />
-          <span />
-        </button>
-        <div className="header-greeting">
-          Olá, {userName}
-        </div>
+      <div className="header-left" style={{ width: '50px' }}>
+        {/* Placeholder para manter flex balanceado */}
+      </div>
+      
+      <div className="header-greeting" style={{
+        position: 'absolute',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        fontSize: '1.5rem',
+        fontWeight: '800',
+        fontFamily: 'Outfit, sans-serif',
+        background: 'linear-gradient(135deg, var(--pearl-aqua), #7bc4ae)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        textShadow: theme === 'dark' ? '0 4px 20px rgba(123, 196, 174, 0.2)' : '0 4px 20px rgba(123, 196, 174, 0.1)'
+      }}>
+        Olá, {userName}
       </div>
       <div className="header-actions">
         <button

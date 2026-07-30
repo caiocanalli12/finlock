@@ -11,20 +11,44 @@
 /* Sidebar */
 .sidebar {
   width: 250px;
-  background-color: var(--bg-secondary);
-  border-right: 1px solid var(--border);
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 24px;
   display: flex;
   flex-direction: column;
-  transition: all 0.3s ease;
-  z-index: 100;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, background-color 0.4s ease, border-color 0.4s ease;
+  z-index: 9999;
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  transform: translateX(calc(-100% - 48px));
+  height: calc(100vh - 48px);
+  will-change: transform;
+}
+
+:root[data-theme="dark"] .sidebar {
+  background-color: rgba(0, 54, 54, 0.75);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar.is-open {
+  transform: translateX(0);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="dark"] .sidebar.is-open {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
 }
 
 .sidebar-header {
   height: 72px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 20px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: none;
 }
 
 .sidebar-nav {
@@ -39,23 +63,30 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 20px;
+  padding: 12px 16px;
+  margin: 0 12px;
+  border-radius: 12px;
   color: var(--text-muted);
   font-weight: 500;
   text-decoration: none;
   transition: all 0.2s ease;
-  border-left: 3px solid transparent;
 }
 
-.sidebar-link:hover, .sidebar-link.active {
+.sidebar-link:hover {
   color: var(--text-main);
-  background-color: rgba(157, 181, 178, 0.1);
-  border-left-color: var(--primary);
+  background-color: rgba(157, 181, 178, 0.15);
+}
+
+.sidebar-link.active {
+  color: var(--bg-main);
+  background-color: var(--primary);
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(123, 196, 174, 0.3);
 }
 
 .sidebar-footer {
   padding: 20px;
-  border-top: 1px solid var(--border);
+  border-top: none;
 }
 
 .logout-button {
@@ -92,7 +123,7 @@
   background-color: var(--surface-strong);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
+  border-bottom: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -148,20 +179,8 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: -250px;
-    height: 100vh;
-  }
-
-  .sidebar.is-open {
-    left: 0;
-    box-shadow: var(--shadow-lg);
-  }
-
   .menu-hamburger {
-    display: block;
+    display: none;
   }
   
   .dashboard-header {
