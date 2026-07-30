@@ -8,6 +8,8 @@ import Dashboard from './pages/Dashboard';
 import DashboardLayout from './components/layout/DashboardLayout';
 import { ThemeProvider } from './contexts/ThemeContext';
 
+import Investments from './pages/Investments';
+
 export default function App() {
   return (
     <ThemeProvider>
@@ -19,6 +21,7 @@ export default function App() {
         
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />
+          <Route path="investimentos" element={<Investments />} />
         </Route>
       </Routes>
     </ThemeProvider>
