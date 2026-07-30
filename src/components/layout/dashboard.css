@@ -8,17 +8,17 @@
   transition: background-color 0.3s ease;
 }
 
-/* Sidebar */
+/* Sidebar - Sempre Escura */
 .sidebar {
   width: 250px;
-  background-color: rgba(255, 255, 255, 0.85);
+  background-color: var(--evergreen);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 24px;
   display: flex;
   flex-direction: column;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, background-color 0.4s ease, border-color 0.4s ease;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
   z-index: 9999;
   position: fixed;
   top: 24px;
@@ -30,7 +30,6 @@
 
 :root[data-theme="dark"] .sidebar {
   background-color: rgba(0, 54, 54, 0.75);
-  border-color: rgba(255, 255, 255, 0.05);
 }
 
 .sidebar.is-open {
@@ -66,22 +65,22 @@
   padding: 12px 16px;
   margin: 0 12px;
   border-radius: 12px;
-  color: var(--text-muted);
+  color: var(--ash-grey); /* Text color clearly visible on dark background */
   font-weight: 500;
   text-decoration: none;
   transition: all 0.2s ease;
 }
 
 .sidebar-link:hover {
-  color: var(--text-main);
-  background-color: rgba(157, 181, 178, 0.15);
+  color: var(--light-cyan);
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .sidebar-link.active {
-  color: var(--bg-main);
-  background-color: var(--primary);
+  color: var(--evergreen);
+  background-color: var(--pearl-aqua);
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(123, 196, 174, 0.3);
+  box-shadow: 0 4px 12px rgba(148, 209, 190, 0.3);
 }
 
 .sidebar-footer {
@@ -120,15 +119,20 @@
 /* Header */
 .dashboard-header {
   height: 72px;
-  background-color: var(--surface-strong);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: none;
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
   z-index: 50;
+}
+
+:root[data-theme="dark"] .dashboard-header {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .header-left {

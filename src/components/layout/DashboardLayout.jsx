@@ -23,28 +23,38 @@ export default function DashboardLayout() {
         title={isSidebarOpen ? "Fechar menu" : "Abrir menu"}
         style={{
           position: 'fixed',
-          top: '24px',
-          left: '24px',
+          top: '32px',
+          left: '32px',
           zIndex: 10000,
-          background: 'var(--bg-secondary)',
-          border: 'none',
-          borderRadius: '50%',
-          width: '52px',
-          height: '52px',
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          width: '56px',
+          height: '56px',
+          borderRadius: '50%',
+          background: 'var(--primary)',
+          color: '#ffffff',
+          border: 'none',
           cursor: 'pointer',
-          backdropFilter: 'blur(10px)',
-          boxShadow: 'var(--shadow-sm)',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          opacity: isSidebarOpen ? 0 : 1, // Esconde quando aberto para não sobrepor a logo da sidebar
-          pointerEvents: isSidebarOpen ? 'none' : 'auto',
-          color: 'var(--text-main)'
+          boxShadow: '0 8px 24px rgba(0, 38, 38, 0.3)',
+          transition: 'transform 0.2s ease, box-shadow 0.2s ease, opacity 0.1s',
+          opacity: isSidebarOpen ? 0 : 1,
+          pointerEvents: isSidebarOpen ? 'none' : 'auto'
+        }}
+        onMouseEnter={(e) => { 
+          if (!isSidebarOpen) {
+            e.currentTarget.style.transform = 'translateY(-4px)'; 
+            e.currentTarget.style.boxShadow = '0 12px 32px rgba(0, 38, 38, 0.4)'; 
+          }
+        }}
+        onMouseLeave={(e) => { 
+          if (!isSidebarOpen) {
+            e.currentTarget.style.transform = 'translateY(0)'; 
+            e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 38, 38, 0.3)'; 
+          }
         }}
       >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <line x1="3" y1="12" x2="21" y2="12"></line>
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <line x1="3" y1="18" x2="21" y2="18"></line>

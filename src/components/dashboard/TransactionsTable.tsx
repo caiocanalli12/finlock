@@ -24,7 +24,7 @@ export default function TransactionsTable({ transactions, onEdit, onDelete }: Pr
     }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '600px' }}>
         <thead>
-          <tr style={{ borderBottom: '1px solid var(--border)', backgroundColor: 'rgba(157, 181, 178, 0.05)' }}>
+          <tr style={{ borderBottom: '1px solid rgba(157, 181, 178, 0.2)' }}>
             <th style={{ padding: '16px 24px', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Descrição</th>
             <th style={{ padding: '16px 24px', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Valor</th>
             <th style={{ padding: '16px 24px', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Categoria</th>
@@ -41,11 +41,11 @@ export default function TransactionsTable({ transactions, onEdit, onDelete }: Pr
             </tr>
           ) : (
             transactions.map(t => (
-              <tr key={t.id} style={{ borderBottom: '1px solid var(--border)', transition: 'background-color 0.2s ease' }} className="table-row">
+              <tr key={t.id} style={{ borderBottom: 'none', transition: 'background-color 0.2s ease', borderRadius: '12px' }} className="table-row">
                 <td style={{ padding: '16px 24px', color: 'var(--text-main)', fontWeight: 500 }}>{t.title}</td>
                 <td style={{ 
                   padding: '16px 24px', 
-                  color: t.type === 'income' ? 'var(--income-color, var(--evergreen))' : '#e74c3c',
+                  color: t.type === 'income' ? '#4ade80' : '#e74c3c',
                   fontWeight: 'bold',
                   fontFamily: 'Outfit, sans-serif',
                   fontSize: '1.05rem'
