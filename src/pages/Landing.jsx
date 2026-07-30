@@ -3,6 +3,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import LogoImage from '../components/Logo';
 import { Link } from 'react-router-dom';
 import logobranca from '../assets/logobranca.png';
+import { Briefcase, TrendingUp, Home, Utensils, Car, PartyPopper } from 'lucide-react';
 
 function Logo({ large = false }) {
   return (
@@ -23,15 +24,15 @@ function InteractiveChart() {
 
   // Dados simulados com subcategorias
   const incomeData = [
-    { label: 'Salário', value: 7000, color: '#15803d', emoji: '💼' },
-    { label: 'Investimentos', value: 1500, color: '#4ade80', emoji: '📈' }
+    { label: 'Salário', value: 7000, color: '#15803d', icon: <Briefcase size={16} /> },
+    { label: 'Investimentos', value: 1500, color: '#4ade80', icon: <TrendingUp size={16} /> }
   ];
 
   const expenseData = [
-    { label: 'Aluguel', value: 1500, color: '#be123c', emoji: '🏠' },     // Vermelho/Rose Escuro
-    { label: 'Alimentação', value: 900, color: '#ea580c', emoji: '🍽️' },  // Laranja Vibrante
-    { label: 'Transporte', value: 400, color: '#eab308', emoji: '🚗' },   // Amarelo Ouro
-    { label: 'Lazer', value: 400, color: '#fca5a5', emoji: '🎉' }        // Rosa Claro
+    { label: 'Aluguel', value: 1500, color: '#be123c', icon: <Home size={16} /> },     // Vermelho/Rose Escuro
+    { label: 'Alimentação', value: 900, color: '#ea580c', icon: <Utensils size={16} /> },  // Laranja Vibrante
+    { label: 'Transporte', value: 400, color: '#eab308', icon: <Car size={16} /> },   // Amarelo Ouro
+    { label: 'Lazer', value: 400, color: '#fca5a5', icon: <PartyPopper size={16} /> }        // Rosa Claro
   ];
 
   const totalIncome = incomeData.reduce((acc, curr) => acc + curr.value, 0);
@@ -203,8 +204,8 @@ function InteractiveChart() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {(hoveredSlice === 'income' ? incomeData : expenseData).map(cat => (
                 <div key={cat.label} style={{ display: 'flex', justifyContent: 'space-between', gap: '24px', alignItems: 'center' }}>
-                  <span style={{ fontSize: '1rem', color: 'var(--text-main)' }}>
-                    <span style={{ filter: 'grayscale(100%)', opacity: 0.8, marginRight: '8px' }}>{cat.emoji}</span>
+                  <span style={{ fontSize: '1rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center' }}>
+                    <span style={{ opacity: 0.8, marginRight: '8px', display: 'flex', alignItems: 'center' }}>{cat.icon}</span>
                     {cat.label}
                   </span>
                   <span style={{ fontSize: '1rem', color: cat.color, fontWeight: 'bold' }}>R$ {cat.value}</span>
