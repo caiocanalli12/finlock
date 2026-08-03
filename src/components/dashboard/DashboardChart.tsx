@@ -45,18 +45,20 @@ export default function DashboardChart({ transactions, selectedPeriod, available
 
   // Mapa de categorias
   const categoryConfig: Record<string, { color: string, emoji: string }> = {
-    'Salário': { color: '#15803d', emoji: '💼' },
+    'Salário': { color: '#15803d', emoji: '💵' },
     'Investimentos': { color: '#4ade80', emoji: '📈' },
     'Receita': { color: '#22c55e', emoji: '💰' },
     'Aluguel': { color: '#be123c', emoji: '🏠' },
-    'Moradia': { color: '#9f1239', emoji: '🏠' },
-    'Alimentação': { color: '#ea580c', emoji: '🍽️' },
+    'Moradia': { color: '#9f1239', emoji: '🏡' },
+    'Alimentação': { color: '#ea580c', emoji: '🍔' },
     'Mercado': { color: '#ea580c', emoji: '🛒' },
     'Transporte': { color: '#eab308', emoji: '🚗' },
-    'Lazer': { color: '#fca5a5', emoji: '🎉' },
+    'Lazer': { color: '#fca5a5', emoji: '🎭' },
     'Internet': { color: '#3b82f6', emoji: '🌐' },
-    'Contas': { color: '#6366f1', emoji: '📄' },
-    'Outros': { color: '#a8a29e', emoji: '📦' }
+    'Contas': { color: '#6366f1', emoji: '🧾' },
+    'Outros': { color: '#a8a29e', emoji: '📦' },
+    'Pix': { color: '#32bcad', emoji: '⚡' },
+    'Outra': { color: '#a8a29e', emoji: '🏷️' }
   };
 
   const fallbackColors = ['#c084fc', '#f472b6', '#38bdf8', '#fbbf24', '#f87171', '#34d399'];
@@ -73,19 +75,33 @@ export default function DashboardChart({ transactions, selectedPeriod, available
   });
 
   let colorIndex = 0;
-  const getCategoryConfig = (catName: string) => {
-    if (categoryConfig[catName]) return categoryConfig[catName];
-    const color = fallbackColors[colorIndex % fallbackColors.length];
+  const incomeFallbackColors = ['#22c55e', '#16a34a', '#15803d', '#4ade80', '#10b981', '#34d399'];
+  const expenseFallbackColors = ['#f43f5e', '#e11d48', '#be123c', '#fb7185', '#f87171', '#ef4444'];
+  
+  const getCategoryConfig = (catName: string, type: 'income' | 'expense') => {
+    // Tratamento para strings corrompidas no banco de dados legadas
+    const normalizedName = catName.replace('rio', 'ário').replace('ǭ', 'á').replace('Sade', 'Saúde').replace('ao', 'ação').replace('ǜ', 'çã').replace('ǧ', 'ú');
+    
+    // Busca pelas chaves do categoryConfig ignorando acentos/erros simples
+    for (const key in categoryConfig) {
+      if (key === catName || key === normalizedName || catName.includes(key.substring(0,3))) {
+        return categoryConfig[key];
+      }
+    }
+    
+    // Se não encontrar, usar cor baseada no tipo para não descaracterizar o gráfico
+    const fallbackList = type === 'income' ? incomeFallbackColors : expenseFallbackColors;
+    const color = fallbackList[colorIndex % fallbackList.length];
     colorIndex++;
     return { color, emoji: '📌' };
   };
 
   const incomeData: CategoryData[] = Object.entries(incomeGroups).map(([label, value]) => ({
-    label, value, type: 'income', ...getCategoryConfig(label)
+    label, value, type: 'income', ...getCategoryConfig(label, 'income')
   })).sort((a, b) => b.value - a.value);
 
   const expenseData: CategoryData[] = Object.entries(expenseGroups).map(([label, value]) => ({
-    label, value, type: 'expense', ...getCategoryConfig(label)
+    label, value, type: 'expense', ...getCategoryConfig(label, 'expense')
   })).sort((a, b) => b.value - a.value);
 
   const totalIncome = incomeData.reduce((acc, curr) => acc + curr.value, 0);
@@ -272,57 +288,27 @@ export default function DashboardChart({ transactions, selectedPeriod, available
               <svg width="100%" height="100%" viewBox="0 0 200 200" style={{ transform: 'rotate(-90deg)', overflow: 'visible', pointerEvents: 'none' }}>
                 <circle cx="100" cy="100" r={radius} fill="transparent" stroke="var(--border)" strokeWidth="24" opacity="0.3" />
                 
-                {/* Receitas */}
-                {hoveredSlice === 'income' ? (
-                  visualIncomeData.map((cat, i) => {
-                    const prevTotal = visualIncomeData.slice(0, i).reduce((sum, c) => sum + c.visualValue, 0);
-                    const offset = -(prevTotal / visualTotal) * circumference;
-                    const dash = (cat.visualValue / visualTotal) * circumference;
-                    return (
-                      <circle 
-                        key={cat.label} cx="100" cy="100" r={radius}
-                        fill="transparent" stroke={cat.color} strokeWidth="24"
-                        strokeDasharray={`${dash} ${circumference}`} strokeDashoffset={offset}
-                        style={{ transition: 'all 0.3s ease', cursor: 'pointer', opacity: (lockedTooltip ? lockedTooltip.slice : hoveredSlice) === 'expense' ? 0.2 : 1, pointerEvents: 'stroke' }}
-                        onMouseEnter={() => { if (!lockedTooltip) { setHoveredSlice('income'); setHoveredItem(null); } }}
-                        onClick={(e) => { e.stopPropagation(); setLockedTooltip({ x: mousePos.x, y: mousePos.y, slice: 'income', item: null }); }}
-                      />
-                    );
-                  })
-                ) : (
+                {/* Entradas */}
+                {totalIncome > 0 && (
                   <circle 
                     cx="100" cy="100" r={radius}
                     fill="transparent" stroke="#4ade80" strokeWidth="24"
                     strokeDasharray={`${incomeDash} ${circumference}`} strokeDashoffset="0"
-                    style={{ transition: 'all 0.3s ease', cursor: 'pointer', opacity: hoveredSlice === 'expense' ? 0.2 : 1, pointerEvents: 'stroke' }}
-                    onMouseEnter={() => setHoveredSlice('income')}
+                    style={{ transition: 'all 0.3s ease', cursor: 'pointer', opacity: (lockedTooltip ? lockedTooltip.slice : hoveredSlice) === 'expense' ? 0.2 : 1, pointerEvents: 'stroke' }}
+                    onMouseEnter={() => { if (!lockedTooltip) { setHoveredSlice('income'); setHoveredItem(null); } }}
+                    onClick={(e) => { e.stopPropagation(); setLockedTooltip({ x: mousePos.x, y: mousePos.y, slice: 'income', item: null }); }}
                   />
                 )}
                 
                 {/* Despesas */}
-                {hoveredSlice === 'expense' ? (
-                  visualExpenseData.map((cat, i) => {
-                    const prevTotal = visualExpenseData.slice(0, i).reduce((sum, c) => sum + c.visualValue, 0);
-                    const offset = -incomeDash - ((prevTotal / visualTotal) * circumference);
-                    const dash = (cat.visualValue / visualTotal) * circumference;
-                    return (
-                      <circle 
-                        key={cat.label} cx="100" cy="100" r={radius}
-                        fill="transparent" stroke={cat.color} strokeWidth="24"
-                        strokeDasharray={`${dash} ${circumference}`} strokeDashoffset={offset}
-                        style={{ transition: 'all 0.3s ease', cursor: 'pointer', opacity: (lockedTooltip ? lockedTooltip.slice : hoveredSlice) === 'income' ? 0.2 : 1, pointerEvents: 'stroke' }}
-                        onMouseEnter={() => { if (!lockedTooltip) { setHoveredSlice('expense'); setHoveredItem(null); } }}
-                        onClick={(e) => { e.stopPropagation(); setLockedTooltip({ x: mousePos.x, y: mousePos.y, slice: 'expense', item: null }); }}
-                      />
-                    );
-                  })
-                ) : (
+                {totalExpense > 0 && (
                   <circle 
                     cx="100" cy="100" r={radius}
                     fill="transparent" stroke="#f43f5e" strokeWidth="24"
                     strokeDasharray={`${expenseDash} ${circumference}`} strokeDashoffset={-incomeDash}
-                    style={{ transition: 'all 0.3s ease', cursor: 'pointer', opacity: hoveredSlice === 'income' ? 0.2 : 1, pointerEvents: 'stroke' }}
-                    onMouseEnter={() => setHoveredSlice('expense')}
+                    style={{ transition: 'all 0.3s ease', cursor: 'pointer', opacity: (lockedTooltip ? lockedTooltip.slice : hoveredSlice) === 'income' ? 0.2 : 1, pointerEvents: 'stroke' }}
+                    onMouseEnter={() => { if (!lockedTooltip) { setHoveredSlice('expense'); setHoveredItem(null); } }}
+                    onClick={(e) => { e.stopPropagation(); setLockedTooltip({ x: mousePos.x, y: mousePos.y, slice: 'expense', item: null }); }}
                   />
                 )}
               </svg>
@@ -335,43 +321,15 @@ export default function DashboardChart({ transactions, selectedPeriod, available
                   <div 
                     onMouseEnter={() => { if (!lockedTooltip) { setHoveredSlice('income'); setHoveredItem(null); } }}
                     onClick={(e) => { e.stopPropagation(); setLockedTooltip({ x: mousePos.x, y: mousePos.y, slice: 'income', item: null }); }}
-                    style={{ flex: 1, maxWidth: '80px', height: `${(visualIncome / visualTotal) * 100}%`, display: 'flex', flexDirection: 'column-reverse', gap: '2px', position: 'relative', cursor: 'pointer', transition: 'transform 0.2s ease', transform: (lockedTooltip ? lockedTooltip.slice : hoveredSlice) === 'income' ? 'scaleX(1.05)' : 'scaleX(1)', opacity: (lockedTooltip ? lockedTooltip.slice : hoveredSlice) === 'expense' ? 0.3 : 1 }}
-                  >
-                    {visualIncomeData.map((cat, i) => (
-                      <div 
-                        key={cat.label}
-                        onClick={(e) => { e.stopPropagation(); setLockedTooltip({ x: mousePos.x, y: mousePos.y, slice: 'income', item: null }); }}
-                        style={{
-                          width: '100%', flex: cat.visualValue,
-                          background: cat.color,
-                          borderRadius: visualIncomeData.length === 1 ? '8px' : (i === 0 ? '0 0 8px 8px' : (i === visualIncomeData.length - 1 ? '8px 8px 0 0' : '2px')),
-                          transition: 'all 0.2s ease',
-                        }}
-                      />
-                    ))}
-                    {incomeData.length === 0 && <div style={{ flex: 1, background: 'rgba(0,0,0,0.05)', borderRadius: '8px' }} />}
-                  </div>
+                    style={{ flex: 1, maxWidth: '80px', height: `${(visualIncome / visualTotal) * 100}%`, backgroundColor: '#4ade80', borderRadius: '8px', position: 'relative', cursor: 'pointer', transition: 'transform 0.2s ease', transform: (lockedTooltip ? lockedTooltip.slice : hoveredSlice) === 'income' ? 'scaleX(1.05)' : 'scaleX(1)', opacity: (lockedTooltip ? lockedTooltip.slice : hoveredSlice) === 'expense' ? 0.3 : 1 }}
+                  />
 
                   {/* Coluna de Despesas */}
                   <div 
                     onMouseEnter={() => { if (!lockedTooltip) { setHoveredSlice('expense'); setHoveredItem(null); } }}
                     onClick={(e) => { e.stopPropagation(); setLockedTooltip({ x: mousePos.x, y: mousePos.y, slice: 'expense', item: null }); }}
-                    style={{ flex: 1, maxWidth: '80px', height: `${(visualExpense / visualTotal) * 100}%`, display: 'flex', flexDirection: 'column-reverse', gap: '2px', position: 'relative', cursor: 'pointer', transition: 'transform 0.2s ease', transform: (lockedTooltip ? lockedTooltip.slice : hoveredSlice) === 'expense' ? 'scaleX(1.05)' : 'scaleX(1)', opacity: (lockedTooltip ? lockedTooltip.slice : hoveredSlice) === 'income' ? 0.3 : 1 }}
-                  >
-                    {visualExpenseData.map((cat, i) => (
-                      <div 
-                        key={cat.label}
-                        onClick={(e) => { e.stopPropagation(); setLockedTooltip({ x: mousePos.x, y: mousePos.y, slice: 'expense', item: null }); }}
-                        style={{
-                          width: '100%', flex: cat.visualValue,
-                          background: cat.color,
-                          borderRadius: visualExpenseData.length === 1 ? '8px' : (i === 0 ? '0 0 8px 8px' : (i === visualExpenseData.length - 1 ? '8px 8px 0 0' : '2px')),
-                          transition: 'all 0.2s ease',
-                        }}
-                      />
-                    ))}
-                    {expenseData.length === 0 && <div style={{ flex: 1, background: 'rgba(0,0,0,0.05)', borderRadius: '8px' }} />}
-                  </div>
+                    style={{ flex: 1, maxWidth: '80px', height: `${(visualExpense / visualTotal) * 100}%`, backgroundColor: '#f43f5e', borderRadius: '8px', position: 'relative', cursor: 'pointer', transition: 'transform 0.2s ease', transform: (lockedTooltip ? lockedTooltip.slice : hoveredSlice) === 'expense' ? 'scaleX(1.05)' : 'scaleX(1)', opacity: (lockedTooltip ? lockedTooltip.slice : hoveredSlice) === 'income' ? 0.3 : 1 }}
+                  />
                   
                 </div>
               )}
@@ -499,3 +457,4 @@ export default function DashboardChart({ transactions, selectedPeriod, available
     </div>
   );
 }
+
